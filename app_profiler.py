@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 
@@ -50,9 +51,35 @@ if uploaded_file:
         st.write("The CSV does not have a 'Year' column to visualize trends.")
 
 # Add STEM Data Section
-st.header("Explore STEM Data")
+st.header("Interactive Topic Modelling (LDA)")
 
 # Generate dummy data
+st.markdown("""
+This interactive visualization was generated using **Latent Dirichlet Allocation (LDA)**  
+and allows exploration of:
+- Topic prevalence
+- Keyword distributions
+- Inter-topic distances
+""")
+
+with st.expander("🔍 View Interactive Topic Model"):
+    try:
+        with open("lda_vis.html", "r", encoding="utf-8") as f:
+            lda_html = f.read()
+
+        components.html(
+            lda_html,
+            height=800,
+            scrolling=True
+        )
+
+    except FileNotFoundError:
+        st.error(
+            "LDA visualization file not found. "
+            "Ensure `lda_vis.html` exists in the `assets/` folder."
+        )
+
+
 physics_data = pd.DataFrame({
     "Experiment": ["Alpha Decay", "Beta Decay", "Gamma Ray Analysis", "Quark Study", "Higgs Boson"],
     "Energy (MeV)": [4.2, 1.5, 2.9, 3.4, 7.1],
@@ -71,6 +98,27 @@ weather_data = pd.DataFrame({
     "Humidity (%)": [65, 70, 55, 80, 50],
     "Recorded Date": pd.date_range(start="2024-01-01", periods=5),
 })
+
+#Interactiveness
+st.subheader("How to Read This Visualization")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("""
+    **Left panel**
+    - Topic size = prevalence
+    - Distance = similarity
+    """)
+
+with col2:
+    st.markdown("""
+    **Right panel**
+    - λ slider adjusts keyword relevance
+    - Higher λ → frequency
+    - Lower λ → exclusivity
+    """)
+
 
 # Tabbed view for STEM data
 st.subheader("STEM Data Viewer")
@@ -119,3 +167,4 @@ st.header("Contact Information")
 email = "2021276346@ufs4life.ac.za"
 
 st.write(f"You can reach {name} at {email}.")
+

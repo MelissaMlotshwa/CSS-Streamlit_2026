@@ -51,7 +51,7 @@ st.write(f"**Field of Research:** {field}")
 st.write(f"**Institution:** {institution}")
 
 st.image(
-    "https://www.google.com/url?sa=i&url=https%3A%2F%2Fthirdeyedata.ai%2Ftopic-modelling-using-lda-updated-for-2025%2F&psig=AOvVaw0Wni5QfoyiwAwZyzYzyT_Y&ust=1770106646237000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCPiY_q2vupIDFQAAAAAdAAAAABAE",
+    "https://thirdeyedata.ai/wp-content/uploads/2025/07/Explaining-Topic-Modeling.jpg",
     caption="Visual metaphor for topic structures",
     use_column_width=True
 )
@@ -247,6 +247,7 @@ st.header("Contact Information")
 
 email = "2021276346@ufs4life.ac.za"
 st.write(f"You can reach **{name}** at {email}.")
+
 
 
 

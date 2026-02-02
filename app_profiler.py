@@ -1,65 +1,135 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
-import numpy as np
 
-# Title of the app
-st.title("Researcher Profile Page with STEM Data")
+# ===============================
+# PAGE CONFIG
+# ===============================
+st.set_page_config(
+    page_title="Topic Modelling with LDA | Twitter Data",
+    layout="wide"
+)
 
-# Collect basic information
+# ===============================
+# TITLE & INTRO
+# ===============================
+st.title("Topic Modelling using LDA with Twitter Data")
+
+st.markdown("""
+This application provides an **interactive overview** of a topic modelling analysis
+conducted on Twitter data using **Latent Dirichlet Allocation (LDA)**.
+
+It summarises the full workflow implemented in the accompanying Jupyter notebook,
+from preprocessing to interpretation.
+""")
+
+# ===============================
+# SIDEBAR NAVIGATION
+# ===============================
+st.sidebar.title("Navigation Guide")
+st.sidebar.markdown("""
+- 📌 Research Context  
+- 🧹 NLP Methodology  
+- 📊 Key Results  
+- 🔍 Interactive Topic Visualisation  
+- 🧠 Topic Interpretation  
+- 📈 Model Evaluation  
+- 📬 Contact Information  
+""")
+
+# ===============================
+# RESEARCHER OVERVIEW
+# ===============================
+st.header("Researcher Overview")
+
 name = "Melissa K Mlotshwa"
 field = "Business and Financial Analytics"
 institution = "University of the Free State"
 
-# Display basic profile information
-st.header("Researcher Overview")
 st.write(f"**Name:** {name}")
 st.write(f"**Field of Research:** {field}")
 st.write(f"**Institution:** {institution}")
 
 st.image(
     "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg",
-    caption="Nature (Pixabay)"
+    caption="Visual metaphor for topic structures (Pixabay)",
+    use_column_width=True
 )
 
-# Add a section for publications
-st.header("Publications")
-uploaded_file = st.file_uploader("Upload a CSV of Publications", type="csv")
+# ===============================
+# RESEARCH CONTEXT
+# ===============================
+st.header("Research Context")
 
-if uploaded_file:
-    publications = pd.read_csv(uploaded_file)
-    st.dataframe(publications)
+st.markdown("""
+Social media platforms such as Twitter generate large volumes of unstructured text data.
+This project applies **topic modelling** to uncover latent themes in public discourse.
 
-    # Add filtering for year or keyword
-    keyword = st.text_input("Filter by keyword", "")
-    if keyword:
-        filtered = publications[
-            publications.apply(lambda row: keyword.lower() in row.astype(str).str.lower().values, axis=1)
-        ]
-        st.write(f"Filtered Results for '{keyword}':")
-        st.dataframe(filtered)
-    else:
-        st.write("Showing all publications")
+**Research objectives:**
+- Identify dominant discussion themes
+- Explore relationships between keywords
+- Understand topic prevalence within the corpus
+""")
 
-# Add a section for visualizing publication trends
-st.header("Publication Trends")
-if uploaded_file:
-    if "Year" in publications.columns:
-        year_counts = publications["Year"].value_counts().sort_index()
-        st.bar_chart(year_counts)
-    else:
-        st.write("The CSV does not have a 'Year' column to visualize trends.")
+# ===============================
+# METHODOLOGY OVERVIEW
+# ===============================
+st.header("Methodology Overview")
 
-# Add STEM Data Section
+st.markdown("""
+The notebook follows a standard **Natural Language Processing (NLP) pipeline**:
+""")
+
+st.markdown("""
+🧹 **Text Preprocessing**
+- Tokenisation
+- Stopword removal
+- Lemmatization
+
+📊 **Vectorisation**
+- Bag-of-Words representation
+- Document–Term Matrix using `CountVectorizer`
+
+🧠 **Topic Modelling**
+- Latent Dirichlet Allocation (LDA)
+- Optimal topic number selection
+
+📈 **Evaluation & Interpretation**
+- Topic coherence and perplexity
+- Interactive visualisation using pyLDAvis
+""")
+
+st.info("This Streamlit app summarises these steps without recomputing the model.")
+
+# ===============================
+# KEY RESULTS SUMMARY
+# ===============================
+st.header("Key Findings")
+
+st.markdown("""
+- The LDA model identified **distinct latent topics** within Twitter discussions
+- Topics varied in prevalence, indicating unequal representation in the corpus
+- Keyword overlap revealed thematic proximity between certain topics
+- The results demonstrate LDA’s usefulness for exploratory text analysis
+""")
+
+# ===============================
+# INTERACTIVE LDA VISUALISATION
+# ===============================
 st.header("Interactive Topic Modelling (LDA)")
 
-# Generate dummy data
 st.markdown("""
-This interactive visualization was generated using **Latent Dirichlet Allocation (LDA)**  
-and allows exploration of:
-- Topic prevalence
-- Keyword distributions
-- Inter-topic distances
+The interactive visualisation below allows you to:
+- Explore topic distances
+- Examine keyword relevance
+- Adjust the λ parameter for interpretation
+""")
+
+st.warning("""
+💡 **How to read this visualisation**
+- Larger circles = more prevalent topics
+- Distance between circles = topic similarity
+- Adjust λ to balance frequency vs exclusivity
 """)
 
 with st.expander("🔍 View Interactive Topic Model"):
@@ -72,99 +142,110 @@ with st.expander("🔍 View Interactive Topic Model"):
             height=800,
             scrolling=True
         )
-
     except FileNotFoundError:
         st.error(
             "LDA visualization file not found. "
-            "Ensure `lda_vis.html` exists in the `assets/` folder."
+            "Ensure `lda_vis.html` exists in the repository."
         )
 
+# ===============================
+# TOPIC INTERPRETATION
+# ===============================
+st.header("Topic Interpretation Guide")
 
-physics_data = pd.DataFrame({
-    "Experiment": ["Alpha Decay", "Beta Decay", "Gamma Ray Analysis", "Quark Study", "Higgs Boson"],
-    "Energy (MeV)": [4.2, 1.5, 2.9, 3.4, 7.1],
-    "Date": pd.date_range(start="2024-01-01", periods=5),
-})
-
-astronomy_data = pd.DataFrame({
-    "Celestial Object": ["Mars", "Venus", "Jupiter", "Saturn", "Moon"],
-    "Brightness (Magnitude)": [-2.0, -4.6, -1.8, 0.2, -12.7],
-    "Observation Date": pd.date_range(start="2024-01-01", periods=5),
-})
-
-weather_data = pd.DataFrame({
-    "City": ["Cape Town", "London", "New York", "Tokyo", "Sydney"],
-    "Temperature (°C)": [25, 10, -3, 15, 30],
-    "Humidity (%)": [65, 70, 55, 80, 50],
-    "Recorded Date": pd.date_range(start="2024-01-01", periods=5),
-})
-
-#Interactiveness
-st.subheader("How to Read This Visualization")
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("""
-    **Left panel**
-    - Topic size = prevalence
-    - Distance = similarity
-    """)
-
-with col2:
-    st.markdown("""
-    **Right panel**
-    - λ slider adjusts keyword relevance
-    - Higher λ → frequency
-    - Lower λ → exclusivity
-    """)
-
-
-# Tabbed view for STEM data
-st.subheader("STEM Data Viewer")
-data_option = st.selectbox(
-    "Choose a dataset to explore", 
-    ["Physics Experiments", "Astronomy Observations", "Weather Data"]
+topic_choice = st.selectbox(
+    "Select a topic to explore",
+    [
+        "Topic 1 – Economic Impact",
+        "Topic 2 – Public Health Discourse",
+        "Topic 3 – Social & Behavioural Trends",
+        "Topic 4 – Policy & Governance"
+    ]
 )
 
-if data_option == "Physics Experiments":
-    st.write("### Physics Experiment Data")
-    st.dataframe(physics_data)
-    # Add widget to filter by Energy levels
-    energy_filter = st.slider("Filter by Energy (MeV)", 0.0, 10.0, (0.0, 10.0))
-    filtered_physics = physics_data[
-        physics_data["Energy (MeV)"].between(energy_filter[0], energy_filter[1])
-    ]
-    st.write(f"Filtered Results for Energy Range {energy_filter}:")
-    st.dataframe(filtered_physics)
+if topic_choice == "Topic 1 – Economic Impact":
+    st.markdown("""
+    This topic is dominated by terms related to:
+    - Economic growth
+    - Financial impact
+    - Market and cost dynamics
+    """)
 
-elif data_option == "Astronomy Observations":
-    st.write("### Astronomy Observation Data")
-    st.dataframe(astronomy_data)
-    # Add widget to filter by Brightness
-    brightness_filter = st.slider("Filter by Brightness (Magnitude)", -15.0, 5.0, (-15.0, 5.0))
-    filtered_astronomy = astronomy_data[
-        astronomy_data["Brightness (Magnitude)"].between(brightness_filter[0], brightness_filter[1])
-    ]
-    st.write(f"Filtered Results for Brightness Range {brightness_filter}:")
-    st.dataframe(filtered_astronomy)
+elif topic_choice == "Topic 2 – Public Health Discourse":
+    st.markdown("""
+    This topic reflects discussions around:
+    - Health systems
+    - Community health outcomes
+    - Program implementation
+    """)
 
-elif data_option == "Weather Data":
-    st.write("### Weather Data")
-    st.dataframe(weather_data)
-    # Add widgets to filter by temperature and humidity
-    temp_filter = st.slider("Filter by Temperature (°C)", -10.0, 40.0, (-10.0, 40.0))
-    humidity_filter = st.slider("Filter by Humidity (%)", 0, 100, (0, 100))
-    filtered_weather = weather_data[
-        weather_data["Temperature (°C)"].between(temp_filter[0], temp_filter[1]) &
-        weather_data["Humidity (%)"].between(humidity_filter[0], humidity_filter[1])
-    ]
-    st.write(f"Filtered Results for Temperature {temp_filter} and Humidity {humidity_filter}:")
-    st.dataframe(filtered_weather)
+elif topic_choice == "Topic 3 – Social & Behavioural Trends":
+    st.markdown("""
+    This topic captures:
+    - Organisational processes
+    - Social practices
+    - Behavioural patterns
+    """)
 
-# Add a contact section
+elif topic_choice == "Topic 4 – Policy & Governance":
+    st.markdown("""
+    This topic is associated with:
+    - Policy frameworks
+    - Governance structures
+    - Institutional responses
+    """)
+
+# ===============================
+# MODEL EVALUATION
+# ===============================
+st.header("Model Evaluation")
+
+st.markdown("""
+The notebook evaluated model quality using:
+
+- **Topic Coherence**  
+  Measures interpretability and semantic consistency
+
+- **Perplexity**  
+  Measures model generalisation to unseen data
+
+A balance between these metrics was used to select the optimal number of topics.
+""")
+
+# ===============================
+# OPTIONAL: PUBLICATIONS UPLOAD
+# ===============================
+st.header("Related Publications (Optional)")
+
+uploaded_file = st.file_uploader("Upload a CSV of publications", type="csv")
+
+if uploaded_file:
+    publications = pd.read_csv(uploaded_file)
+    st.dataframe(publications)
+
+# ===============================
+# CONCLUSION
+# ===============================
+st.header("Conclusion")
+
+st.markdown("""
+This application serves as a **research companion dashboard** to the original notebook.
+
+It transforms technical outputs into:
+- Interpretable visuals
+- Structured explanations
+- Interactive exploration tools
+
+Such dashboards are valuable for communicating NLP research to both technical
+and non-technical audiences.
+""")
+
+# ===============================
+# CONTACT INFORMATION
+# ===============================
 st.header("Contact Information")
-email = "2021276346@ufs4life.ac.za"
 
-st.write(f"You can reach {name} at {email}.")
+email = "2021276346@ufs4life.ac.za"
+st.write(f"You can reach **{name}** at {email}.")
+
 
